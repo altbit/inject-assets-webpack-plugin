@@ -5,7 +5,7 @@ const matchedByAnyOf = (patterns, search, negate = false) => {
 
   const patternsArray = !Array.isArray(patterns) ? [patterns] : patterns;
   return patternsArray.reduce((isMatched, pattern) => {
-    if (typeof pattern === 'string' && search.includes(pattern)) {
+    if (typeof pattern === 'string' && search.indexOf(pattern) !== -1) {
       return !negate;
     }
 
@@ -56,8 +56,8 @@ const processContent = (options, stats) => content => {
 
     let fileNames = [];
     Object.keys(stats.assetsByChunkName)
-      .filter(entry => chunks.includes(entry))
-      .filter(entry => !excludeChunks.includes(entry))
+      .filter(entry => chunks.indexOf(entry) !== -1)
+      .filter(entry => excludeChunks.indexOf(entry) === -1)
       .map(entry => {
         let assets = stats.assetsByChunkName[entry];
         if (!Array.isArray(assets)) {

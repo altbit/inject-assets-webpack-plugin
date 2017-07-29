@@ -7,7 +7,8 @@ const fs = Promise.promisifyAll(require('fs'));
 
 class InjectAssetsWebpackPlugin {
   constructor(options = {}, replacements = []) {
-    this.options = processOptions(this.compiler)(options)(replacements);
+    this.pluginOptions = options;
+    this.pluginReplacements = replacements;
   }
 
   onEventHook = webpackStatsData => {
@@ -22,7 +23,7 @@ class InjectAssetsWebpackPlugin {
   };
 
   apply(compiler) {
-    this.compiler = compiler;
+    this.options = processOptions(compiler)(this.pluginOptions)(this.pluginReplacements);
     compiler.plugin(this.options.eventHook, this.onEventHook);
   }
 }
