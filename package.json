@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Inject webpack assets names wherever you want",
   "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/altbit/inject-assets-webpack-plugin.git"
@@ -12,11 +15,18 @@
     "plugin",
     "assets",
     "inject",
-    "hash"
+    "hash",
+    "inject-assets-webpack-plugin"
   ],
-  "author": "Denis Degtiarev",
+  "author": "Denis Degtiarev <alt.degtyarev@gmail.com> (https://github.com/altbit)",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/altbit/inject-assets-webpack-plugin/issues"
+  },
   "homepage": "https://github.com/altbit/inject-assets-webpack-plugin",
+  "peerDependencies": {
+    "webpack": "1 || ^2 || ^3"
+  },
   "dependencies": {
     "bluebird": "^3.5.0"
   },
