@@ -1,6 +1,6 @@
 {
   "name": "inject-assets-webpack-plugin",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Inject webpack assets names wherever you want",
   "main": "dist/index.js",
   "files": [
@@ -31,7 +31,7 @@
     "bluebird": "^3.5.0"
   },
   "scripts": {
-    "test": "npm run build:tests",
+    "test": "npm run build:tests && mocha tests_dist/",
     "build": "babel src/ --out-dir dist/",
     "build:tests": "babel tests/ --out-dir tests_dist/"
   },
@@ -41,6 +41,8 @@
     "babel-plugin-transform-proto-to-assign": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
-    "eslint": "^3.19.0"
+    "chai": "^4.1.0",
+    "eslint": "^3.19.0",
+    "mocha": "^3.4.2"
   }
 }
