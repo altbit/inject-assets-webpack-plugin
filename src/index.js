@@ -1,30 +1,38 @@
-import Promise from 'bluebird';
 import processOptions from './processOptions';
 import processContent from './processContent';
+import readContent from './readContent';
 import saveContent from './saveContent';
-
-const fs = Promise.promisifyAll(require('fs'));
+import logger from './logger';
 
 class InjectAssetsWebpackPlugin {
+  processOptionsHandler = processOptions;
+  processContentHandler = processContent;
+  readContentHandler = readContent;
+  saveContentHandler = saveContent;
+  loggerHandler = logger;
+
   constructor(options = {}, replacements = []) {
     this.pluginOptions = options;
     this.pluginReplacements = replacements;
   }
 
   onEventHook = webpackStatsData => {
-    return fs
-      .readFileAsync(this.options.filename, 'utf8')
+    return this.readContentHandler(this.options.filename)
       .catch(() => {
         throw new Error(`error opening ${this.options.filename}`);
       })
-      .then(processContent(this.options, webpackStatsData.toJson()))
-      .then(saveContent(this.options.filename))
-      .catch(error => console.log('\x1b[1m[inject-assets-webpack-plugin] \x1b[31m%s\x1b[0m', error.message));
+      .then(this.processContentHandler(this.options, webpackStatsData.toJson()))
+      .then(this.saveContentHandler(this.loggerHandler)(this.options.filename))
+      .catch(this.loggerHandler.error);
   };
 
   apply(compiler) {
-    this.options = processOptions(compiler)(this.pluginOptions)(this.pluginReplacements);
-    compiler.plugin(this.options.eventHook, this.onEventHook);
+    try {
+      this.options = this.processOptionsHandler(compiler)(this.pluginOptions, this.pluginReplacements);
+      compiler.plugin(this.options.eventHook, this.onEventHook);
+    } catch(error) {
+      this.loggerHandler.error(error);
+    }
   }
 }
 
