@@ -19,7 +19,7 @@ To activate new service worker on rebuild you can also inject webpack build hash
 // {hash}
 
 var myHostname = '{hostname}';
-var filesToCache = '{bundleFiles}';
+var filesToCache = ['{bundleFiles}'];
 ...
 ```
 
