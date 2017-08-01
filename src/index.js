@@ -18,9 +18,6 @@ class InjectAssetsWebpackPlugin {
 
   onEventHook = webpackStatsData => {
     return this.readContentHandler(this.options.filename)
-      .catch(() => {
-        throw new Error(`error opening ${this.options.filename}`);
-      })
       .then(this.processContentHandler(this.options, webpackStatsData.toJson()))
       .then(this.saveContentHandler(this.loggerHandler)(this.options.filename))
       .catch(this.loggerHandler.error);
