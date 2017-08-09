@@ -21,14 +21,16 @@ const processContent = (options, stats) => content => {
   let outputContent = content;
 
   options.replacements.map(replacement => {
-    if (typeof replacement.pattern !== 'string' &&
-      !(replacement.pattern instanceof RegExp)
-    ) {
+    let pattern = replacement.pattern;
+    if (typeof pattern === 'string') {
+      pattern = new RegExp(pattern, 'g');
+    }
+    if (!(pattern instanceof RegExp)) {
       throw new Error('replacement pattern must be a string or RegExp');
     }
 
     if (replacement.type === 'hash') {
-      outputContent = outputContent.replace(replacement.pattern, stats.hash);
+      outputContent = outputContent.replace(pattern, stats.hash);
       return;
     }
 
@@ -36,7 +38,7 @@ const processContent = (options, stats) => content => {
       if (!replacement.value || String(replacement.value) === '') {
         throw new Error('replacement value must be set');
       }
-      outputContent = outputContent.replace(replacement.pattern, replacement.value);
+      outputContent = outputContent.replace(pattern, replacement.value);
       return;
     }
 
@@ -71,13 +73,13 @@ const processContent = (options, stats) => content => {
 
     let decorator = replacement.decorator;
     if (!decorator) {
-      decorator = (files) => ('\'' + files.join('\' , \'') + '\'');
+      decorator = files => ('\'' + files.join('\', \'') + '\'');
     }
     if (typeof decorator !== 'function') {
       throw new Error('decorator must be a function');
     }
 
-    outputContent = outputContent.replace(replacement.pattern, decorator(fileNames));
+    outputContent = outputContent.replace(pattern, decorator(fileNames));
   });
 
   return outputContent;

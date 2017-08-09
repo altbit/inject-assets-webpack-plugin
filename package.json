@@ -1,6 +1,6 @@
 {
   "name": "inject-assets-webpack-plugin",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Inject webpack assets names wherever you want",
   "main": "dist/index.js",
   "files": [
@@ -31,9 +31,11 @@
     "bluebird": "^3.5.0"
   },
   "scripts": {
+    "prepublish": "npm run build && npm run test",
+    "build": "npm run clean && babel src/ --out-dir dist/",
     "test": "npm run build:tests && mocha tests_dist/",
-    "build": "babel src/ --out-dir dist/",
-    "build:tests": "babel tests/ --out-dir tests_dist/"
+    "build:tests": "babel tests/ --out-dir tests_dist/",
+    "clean": "rm -rf dist && rm -rf tests_dist"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

@@ -1,12 +1,13 @@
 /* global describe, it, before */
 import { expect } from 'chai';
+import path from 'path';
 
-import { MockedCompiler, MockedPluginBuilder } from './mocks';
+import { MockedCompiler, MockedPluginBuilder, MOCKED_CONTEXT, MOCKED_PATH } from './mocks';
 
 describe('Plugin', () => {
   it('can be applied to compiler', done => {
     const plugin = new MockedPluginBuilder()
-      .withProcessOptions(() => ({
+      .withProcessOptionsHandler(() => ({
         eventHook: 'someHook',
       }))
       .build();
@@ -26,7 +27,7 @@ describe('Plugin', () => {
       onPlugin: (eventHook, handler) => {
         expect(plugin.options).to.have.all.keys('eventHook', 'filename', 'replacements');
         expect(plugin.options.eventHook).to.equal('done');
-        expect(plugin.options.filename).to.have.string('index.html');
+        expect(plugin.options.filename).to.equal(path.join(MOCKED_CONTEXT, MOCKED_PATH, 'index.html'));
         expect(plugin.options.replacements).to.deep.equal([]);
         done();
       },
@@ -66,8 +67,6 @@ describe('Plugin', () => {
     const compiler = new MockedCompiler();
     compiler.applyPlugin(plugin);
   });
-
-  // todo: implement other tests in few days
 });
 
 

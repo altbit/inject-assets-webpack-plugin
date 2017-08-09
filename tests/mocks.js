@@ -1,18 +1,27 @@
 import Promise from 'bluebird';
 import path from 'path';
+import fs from 'fs';
 
 import Plugin from './../dist/index';
 
-const MOCKED_CONTEXT = path.join(__dirname, 'root');
-const MOCKED_PATH = 'output';
+export const MOCKED_CONTEXT = path.join(__dirname, 'root');
+export const MOCKED_PATH = 'testOutput';
+export const MOCKED_STATS = {
+  hash: 'gfb8j59g-56dfv-4f3n3ydiwf3',
+  publicPath: '/testOutput/',
+  assetsByChunkName: {
+    entry1: 'file1.js',
+    entry2: ['file2.js', 'file1.css', 'file2.js.map'],
+    entry3: ['file3.js', 'file2.css', 'file2.css', 'file3.js.map']
+  },
+};
 
-const mockedPromise = response => new Promise((onSuccess, onFail) => {
-  try {
-    onSuccess(response);
-  } catch(error) {
-    onFail(error);
-  }
-});
+if (!fs.existsSync(MOCKED_CONTEXT)){
+  fs.mkdirSync(MOCKED_CONTEXT);
+}
+if (!fs.existsSync(path.join(MOCKED_CONTEXT, MOCKED_PATH))){
+  fs.mkdirSync(path.join(MOCKED_CONTEXT, MOCKED_PATH));
+}
 
 export class MockedCompiler {
   constructor(options = {}) {
@@ -26,9 +35,11 @@ export class MockedCompiler {
   plugin(eventHook, handler) {
     const { onPlugin } = this.options;
     if (!onPlugin) {
-      handler();
+      return handler(Object.assign({}, MOCKED_STATS, {
+        toJson: () => MOCKED_STATS,
+      }));
     }
-    onPlugin(eventHook, handler);
+    return onPlugin(eventHook, handler);
   }
 
   applyPlugin(plugin) {
@@ -50,17 +61,17 @@ export class MockedPluginBuilder {
     return this;
   }
 
-  withProcessOptions(handler) {
+  withProcessOptionsHandler(handler) {
     this.processOptionsHandler = () => handler;
     return this;
   }
 
   withReadContent(content) {
-    this.readContentHandler = () => mockedPromise(content);
+    this.readContentHandler = () => Promise.resolve(content);
     return this;
   }
 
-  withProcessContent(handler) {
+  withProcessContentHandler(handler) {
     this.processContentHandler = handler;
     return this;
   }
