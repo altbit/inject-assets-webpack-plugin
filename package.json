@@ -1,6 +1,6 @@
 {
   "name": "inject-assets-webpack-plugin",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Inject webpack assets names wherever you want",
   "main": "dist/index.js",
   "files": [
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/altbit/inject-assets-webpack-plugin",
   "peerDependencies": {
-    "webpack": "1 || ^2 || ^3"
+    "webpack": "1 || ^2 || ^3 || ^4"
   },
   "dependencies": {
     "bluebird": "^3.5.0"
